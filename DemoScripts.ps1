@@ -48,16 +48,30 @@ Step3: Git Setup
 # Permanently add C:\Program Files\Git\usr\bin to machine Path variable
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\Git\usr\bin", "Machine")
 
-#----
+##----## on mac: 
+# bash-3.2$ which git                                                                                                                               
+## should be :
+#/usr/local/bin/git  
+#-----
 
 # Generate the key and put into the your user profile .ssh directory
 ssh-keygen -t rsa -b 4096 -C "ebrugul@hotmail.com" -f $env:USERPROFILE\.ssh\id_rsa
 
-#----
+##----##on mac:
+## Ensure that you are in your ~/.ssh folder
+#$ cd ~/.ssh
+
+## Create a new ssh key using the 
+## email address you used to log into Github.
+#$ ssh-keygen -t rsa -C "your_email@domain.com"
+#-----
+
 # Copy the public key. Be sure to copy the .pub for the public key
 Get-Content $env:USERPROFILE\.ssh\id_rsa.pub | clip
 
-#----
+#----#on mac:
+#$ pbcopy < ~/.ssh/id_rsa.pub
+#-----
 
 # List ssh keys
 ssh-add -l
@@ -66,7 +80,19 @@ ssh-add -l
 # Test ssh connection to GitHub
 ssh -T git@github.com
 
-#---
+#---#on mac:
+#bash-3.2$ ssh -T git@github.com                                                                                                                   
+#The authenticity of host 'github.com (192.30.253.112)' can't be established.                                                                      
+#RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.                                                                        
+#Are you sure you want to continue connecting (yes/no)? y                                                                                          
+#Please type 'yes' or 'no': yes                                                                                                                    
+#Warning: Permanently added 'github.com,192.30.253.112' (RSA) to the list of known hosts.                                                                                        
+#Enter passphrase for key '/Users/demokritos/.ssh/id_rsa':                                                                                         
+#Hi ebrucucen! You've successfully authenticated, but GitHub does not provide shell access.                                                        
+##lets try again: 
+#bash-3.2$ ssh -T git@github.com                                                                                                                   
+#Hi ebrucucen! You've successfully authenticated, but GitHub does not provide shell access. 
+#---end of mac
 
 git config --global user.email "ebrugul@hotmail.com"
 git config --global user.name "Ebru Cucen"
@@ -76,7 +102,10 @@ git config --global core.ignorecase false
 # Configure line endings for windows
 git config --global core.autocrlf true
 
+# Get all configuration: 
+git config --global --list
 #---
+
 #Navigate to the lication and git clone: 
 New-Item -Path "C:\" -ItemType "Directory" -Name "Projects" -Force
 
