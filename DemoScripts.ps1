@@ -7,28 +7,11 @@ function Test-Administrator {
     (New-Object Security.Principal.WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
-if (Test-Administrator){
-    # Set your PowerShell execution policy
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
-
-    # Install Chocolatey
-    Invoke-WebRequest https://chocolatey.org/install.ps1 -UseBasicParsing | iex
-
-    #Set Autoconfirmation for installs
-    choco feature enable -name=allowGlobalConfirmation
+if (!(Test-Administrator)){
     
-    # Install Chocolatey packages
-    choco install git.install -y
-    choco install conemu -y
-
-    # Install PowerShell modules
-    Install-PackageProvider NuGet -MinimumVersion '2.8.5.201' -Force
-    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-    Install-Module -Name 'posh-git'
-}
-else
-{
-    write-output "You need to Run as Administrator"
+   $Args = '-noprofile -nologo -executionpolicy bypass -file "{0}"' -f $MyInvocation.MyCommand.Path
+    Start-Process -FilePath 'powershell.exe' -ArgumentList $Args -Verb RunAs
+    exit
 }
 ################################
 Step2: ConEmu Features
